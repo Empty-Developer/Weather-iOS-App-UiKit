@@ -11,14 +11,20 @@ import Foundation
 // MARK: - ModelWeather
 struct ModelWeather: Codable {
     let success: Bool
-    let error: JSONNull?
-    let response: Response
+    let error: APIError?
+    let response: Response?
 
     enum CodingKeys: String, CodingKey {
         case success = "success"
         case error = "error"
         case response = "response"
     }
+}
+
+// MARK: - APIError
+struct APIError: Codable {
+    let code: String
+    let description: String
 }
 
 // MARK: - Response
@@ -61,77 +67,77 @@ struct LOC: Codable {
 
 // MARK: - Ob
 struct Ob: Codable {
-    let type: String
-    let timestamp: Int
-    let dateTimeISO: Date
-    let recTimestamp: Int
-    let recDateTimeISO: Date
-    let tempC: Double
-    let tempF: Int
-    let dewpointC: Double
-    let dewpointF: Int
-    let humidity: Int
-    let pressureMB: Int
-    let pressureIN: Double
-    let spressureMB: Int
-    let spressureIN: Double
-    let altimeterMB: Int
-    let altimeterIN: Double
-    let windKTS: Int
-    let windKPH: Int
-    let windMPH: Int
-    let windMPS: Double
-    let windSpeedKTS: Int
-    let windSpeedKPH: Int
-    let windSpeedMPH: Int
-    let windSpeedMPS: Double
-    let windDirDEG: Int
-    let windDir: String
+    let type: String?
+    let timestamp: Int?
+    let dateTimeISO: Date?
+    let recTimestamp: Int?
+    let recDateTimeISO: Date?
+    let tempC: Double?
+    let tempF: Int?
+    let dewpointC: Double?
+    let dewpointF: Int?
+    let humidity: Int?
+    let pressureMB: Int?
+    let pressureIN: Double?
+    let spressureMB: Int?
+    let spressureIN: Double?
+    let altimeterMB: Int?
+    let altimeterIN: Double?
+    let windKTS: Int?
+    let windKPH: Int?
+    let windMPH: Int?
+    let windMPS: Double?
+    let windSpeedKTS: Int?
+    let windSpeedKPH: Int?
+    let windSpeedMPH: Int?
+    let windSpeedMPS: Double?
+    let windDirDEG: Int?
+    let windDir: String?
     let windGustKTS: JSONNull?
     let windGustKPH: JSONNull?
     let windGustMPH: JSONNull?
     let windGustMPS: JSONNull?
-    let flightRule: String
-    let visibilityKM: Double
-    let visibilityMI: Int
-    let weather: String
-    let weatherShort: String
-    let weatherCoded: String
-    let weatherPrimary: String
-    let weatherPrimaryCoded: String
-    let cloudsCoded: String
-    let icon: String
-    let heatindexC: Double
-    let heatindexF: Int
-    let windchillC: Double
-    let windchillF: Int
-    let feelslikeC: Double
-    let feelslikeF: Int
-    let isDay: Bool
-    let sunrise: Int
-    let sunriseISO: Date
-    let sunset: Int
-    let sunsetISO: Date
+    let flightRule: String?
+    let visibilityKM: Double?
+    let visibilityMI: Int?
+    let weather: String?
+    let weatherShort: String?
+    let weatherCoded: String?
+    let weatherPrimary: String?
+    let weatherPrimaryCoded: String?
+    let cloudsCoded: String?
+    let icon: String?
+    let heatindexC: Double?
+    let heatindexF: Int?
+    let windchillC: Double?
+    let windchillF: Int?
+    let feelslikeC: Double?
+    let feelslikeF: Int?
+    let isDay: Bool?
+    let sunrise: Int?
+    let sunriseISO: Date?
+    let sunset: Int?
+    let sunsetISO: Date?
     let snowDepthCM: JSONNull?
     let snowDepthIN: JSONNull?
-    let precipMM: Double
-    let precipIN: Double
-    let solradWM2: Int
-    let solradMethod: String
-    let ceilingFT: Int
-    let ceilingM: Double
-    let light: Int
+    let precipMM: Double?
+    let precipIN: Double?
+    let solradWM2: Int?
+    let solradMethod: String?
+    let ceilingFT: Int?
+    let ceilingM: Double?
+    let light: Int?
     let uvi: JSONNull?
-    let qc: String
-    let qCcode: Int
-    let trustFactor: Int
-    let tempMin6HrC: Int
-    let tempMin6HrF: Int
-    let tempMax6HrC: Int
-    let tempMax6HrF: Int
-    let precip6HrMM: Double
-    let precip6HrIN: Double
-    let sky: Int
+    let qc: String?
+    let qCcode: Int?
+    let trustFactor: Int?
+    let tempMin6HrC: Int?
+    let tempMin6HrF: Int?
+    let tempMax6HrC: Int?
+    let tempMax6HrF: Int?
+    let precip6HrMM: Double?
+    let precip6HrIN: Double?
+    let sky: Int?
 
     enum CodingKeys: String, CodingKey {
         case type = "type"

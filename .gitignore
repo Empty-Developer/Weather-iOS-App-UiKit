@@ -1,4 +1,4 @@
-Secrets.xcconfig
+**/Secrets.xcconfig
 xcuserdata/
 build/
 DerivedData/

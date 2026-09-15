@@ -14,15 +14,13 @@ class ViewController: UIViewController {
         TODO:
         2) layout
         3) button
-        4) weather api <
         5) icon move
         6) array text
-        7) today weather function
-        8) MVVM <
         9) 3 screen (1 London, 2 New Yourk, 3 Moscov)
      */
     
     private let viewModel = WeatherViewModel()
+    private var cancellables: Set<AnyCancellable> = Set()
     
     func createLabel(text: String, frame: CGRect, font: UIFont) -> UILabel {
         let label: UILabel = UILabel()
@@ -33,9 +31,8 @@ class ViewController: UIViewController {
         return label
     }
     
-    lazy var btnAction: UIAction = UIAction { _ in
-        self.degree.text = "27"
-        self.approximateTemperatureToday.text = "today 17° - 23°"
+    lazy var btnAction: UIAction = UIAction { [weak self] _ in
+        self?.viewModel.fetchWeather()
         
     }
     
@@ -71,18 +68,62 @@ class ViewController: UIViewController {
         return $0
     }(UIButton(primaryAction: btnAction))
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    private func setupUI() {
         view.backgroundColor = .white
-        
         view.addSubview(degree)
         view.addSubview(approximateTemperatureToday)
         view.addSubview(iconWeather)
         view.addSubview(descriptionInformation)
         view.addSubview(informationOfDay)
         view.addSubview(getWeatherbtn)
+    }
+    
+    private func bindViewModel() {
+        viewModel.$weather
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] weather in
+                guard let self = self, let ob = weather?.response?.ob else { return }
+                
+                if let tempC = ob.tempC {
+                    self.degree.text = "\(Int(tempC))"
+                }
+                
+                if let minTempC = ob.dewpointC,
+                   let maxTempC = ob.tempC {
+                    self.approximateTemperatureToday.text = "today \(minTempC)° - \(maxTempC)°"
+                }
+                
+                
+            }
+            .store(in: &cancellables)
         
+        viewModel.$isLoading
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] isLoading in
+                self?.getWeatherbtn.isEnabled = !isLoading
+                self?.getWeatherbtn.alpha = isLoading ? 0.5 : 1.0
+            }
+            .store(in: &cancellables)
+                
+        viewModel.$errorMessage
+            .compactMap { $0 }
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] message in
+                self?.showErrorAlert(message: message)
+            }
+            .store(in: &cancellables)
+    }
+        
+    private func showErrorAlert(message: String) {
+        let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupUI()
+        bindViewModel()
     }
     
 }
-
