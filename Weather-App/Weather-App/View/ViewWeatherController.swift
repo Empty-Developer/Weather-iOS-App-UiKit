@@ -15,10 +15,8 @@ class ViewController: UIViewController {
         2) layout
         3) button
         5) icon move
-        6) array text
         9) 3 screen (1 London, 2 New Yourk, 3 Moscov)
      */
-    
     private let viewModel = WeatherViewModel()
     private var cancellables: Set<AnyCancellable> = Set()
     
@@ -49,7 +47,7 @@ class ViewController: UIViewController {
     lazy var descriptionInformation: UILabel = createLabel(text: "outfit of the day", frame: CGRect(x: 35, y: approximateTemperatureToday.frame.maxY + 100, width: view.frame.width - 70, height: 12), font: UIFont.getGeistVaribleFont(fontType: .medium, size: 12))
     
     lazy var informationOfDay: UILabel = {
-        $0.text = "shirt, pants, jeans, dress, skirt"
+        $0.text = "———, ———, ———, ———, ———"
         $0.numberOfLines = 0
         $0.font = UIFont.getGeistVaribleFont(fontType: .bold, size: 48)
         $0.textColor = .black
@@ -86,13 +84,15 @@ class ViewController: UIViewController {
                 
                 if let tempC = ob.tempC {
                     self.degree.text = "\(Int(tempC))"
+                    
+                    let userInfo = ViewModelOutfitOfTheDay(dataUser: Int(tempC))
+                    self.informationOfDay.text = userInfo.getValyeOutfit()
                 }
                 
                 if let minTempC = ob.dewpointC,
                    let maxTempC = ob.tempC {
                     self.approximateTemperatureToday.text = "today \(minTempC)° - \(maxTempC)°"
                 }
-                
                 
             }
             .store(in: &cancellables)
