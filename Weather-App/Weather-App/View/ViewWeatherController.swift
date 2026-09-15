@@ -8,15 +8,22 @@
 import UIKit
 import Combine
 
-class ViewController: UIViewController {
-    
-    /*
-        TODO:
-        2) layout
-        3) button
-        5) icon move
-        9) 3 screen (1 London, 2 New Yourk, 3 Moscov)
-     */
+/*
+    TODO: Work
+    1. configure ServiceWeather
+    2. configure ViewWeatherController
+    3. configure ViewModelWeather
+    4. configure ModelIcon
+    5. configure ProviderIcon
+    6. configure ViewModelIcon
+    7. create three button London, Moscow, Tokyo
+    8. configure ViewModelWeather for three location
+    9. configure media
+    10. receive data instantly!! and delete button "Get Weather"
+*/
+
+class ViewWeatherController: UIViewController {
+    // MARK: - Dependencies
     private let viewModel = WeatherViewModel()
     private var cancellables: Set<AnyCancellable> = Set()
     
