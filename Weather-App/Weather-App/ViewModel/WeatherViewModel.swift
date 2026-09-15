@@ -15,8 +15,8 @@ class WeatherViewModel: ObservableObject {
     
     private var cancellables = Set<AnyCancellable>()
     
-    private let clientId = "V6RJhXJfqG7uLStG5TFuF"
-    private let clientSecret = "E9pC7YD6KVJZPN4dPpuSPJ04FgvqfW0tda62A4Qq"
+    private let clientId = Secrets.clientId
+    private let clientSecret = Secrets.clientSecret
     
     func fetchWeather(for sity: String) {
         guard let url = URL(string: "https://data.api.xweather.com/observations/seattle,wa?client_id=\(clientId)&client_secret=\(clientSecret)")
@@ -28,7 +28,22 @@ class WeatherViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
         
-        
+        URLSession.shared.dataTaskPublisher(for: url)
+            .map{$0.data}
+            .decode(type: ModelWeather.self, decoder: JSONDecoder())
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { completion in
+                self.isLoading = false
+                switch completion {
+                case .finished:
+                    break
+                case .failure(let error):
+                    self.errorMessage = error.localizedDescription
+                }
+            }, receiveValue: {weather in
+                self.weather = weather
+            })
+            .store(in: &self.cancellables)
     }
     
 }

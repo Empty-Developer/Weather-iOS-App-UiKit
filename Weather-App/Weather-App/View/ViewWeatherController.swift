@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Combine
 
 class ViewController: UIViewController {
     
@@ -13,14 +14,15 @@ class ViewController: UIViewController {
         TODO:
         2) layout
         3) button
-        4) weather api
+        4) weather api <
         5) icon move
         6) array text
         7) today weather function
-        8) MVVM
+        8) MVVM <
         9) 3 screen (1 London, 2 New Yourk, 3 Moscov)
      */
     
+    private let viewModel = WeatherViewModel()
     
     func createLabel(text: String, frame: CGRect, font: UIFont) -> UILabel {
         let label: UILabel = UILabel()
