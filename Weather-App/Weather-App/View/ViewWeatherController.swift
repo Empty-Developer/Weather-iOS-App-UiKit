@@ -92,8 +92,8 @@ class ViewWeatherController: UIViewController {
                 if let tempC = ob.tempC {
                     self.degree.text = "\(Int(tempC))"
                     
-                    let userInfo = ViewModelOutfitOfTheDay(dataUser: Int(tempC))
-                    self.informationOfDay.text = userInfo.getValyeOutfit()
+//                    let userInfo = ViewModelOutfitOfTheDay(dataUser: Int(tempC))
+//                    self.informationOfDay.text = userInfo.getValyeOutfit()
                 }
                 
                 if let minTempC = ob.dewpointC,
