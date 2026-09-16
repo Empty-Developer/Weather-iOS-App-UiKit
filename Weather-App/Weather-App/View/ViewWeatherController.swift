@@ -10,13 +10,14 @@ import Combine
 
 /*
     TODO: Work
-    4. configure ModelIcon
-    5. configure ProviderIcon
-    6. configure ViewModelIcon
-    7. create three button London, Moscow, Tokyo
-    8. configure ViewModelWeather for three location
-    9. configure media
-    10. receive data instantly!! and delete button "Get Weather"
+    2. configure ModelIcon
+    2. configure ProviderIcon
+    2. configure ViewModelIcon
+ 
+    3. create three button London, Moscow, Tokyo
+    3. configure ViewModelWeather for three location
+ 
+    4. configure media
 */
 
 class ViewWeatherController: UIViewController {
@@ -60,7 +61,7 @@ class ViewWeatherController: UIViewController {
         return $0
     }(UIImageView())
     
-    lazy var descriptionInformation: UILabel = createLabel(text: "outfit of the day", frame: CGRect(x: 35, y: approximateTemperatureToday.frame.maxY + 100, width: view.frame.width - 70, height: 12), font: UIFont.getGeistVaribleFont(fontType: .medium, size: 12))
+    lazy var descriptionInformation: UILabel = createLabel(text: "outfit of the day", frame: CGRect(x: 35, y: approximateTemperatureToday.frame.maxY + 180, width: view.frame.width - 70, height: 12), font: UIFont.getGeistVaribleFont(fontType: .medium, size: 12))
     
     lazy var informationOfDay: UILabel = {
         $0.text = "———, ———, ———, ———, ———"
@@ -72,16 +73,6 @@ class ViewWeatherController: UIViewController {
         return $0
     }(UILabel())
     
-    lazy var getWeatherbtn: UIButton = {
-        $0.setTitle("Get Weather", for: .normal)
-        $0.setTitleColor(.white, for: .normal)
-        $0.backgroundColor = .black
-        $0.layer.cornerRadius = 10
-        $0.frame.size = CGSize(width: view.frame.width - 70, height: 50)
-        $0.frame.origin = CGPoint(x: 30, y: informationOfDay.frame.maxY + 20)
-        return $0
-    }(UIButton(primaryAction: btnAction))
-    
     private func setupUI() {
         view.backgroundColor = .white
         view.addSubview(degree)
@@ -89,12 +80,10 @@ class ViewWeatherController: UIViewController {
         view.addSubview(iconWeather)
         view.addSubview(descriptionInformation)
         view.addSubview(informationOfDay)
-        view.addSubview(getWeatherbtn)
     }
     
     // MARK: - Bindin
     private func bindViewModel() {
-        print("https://data.api.xweather.com/observations/seattle,wa?client_id=\(Secrets.clientId)&client_secret=\(Secrets.clientSecret)")
             viewModel.$temperatureText
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] text in
@@ -119,8 +108,7 @@ class ViewWeatherController: UIViewController {
             viewModel.$isLoading
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] isLoading in
-                    self?.getWeatherbtn.isEnabled = !isLoading
-                    self?.getWeatherbtn.alpha = isLoading ? 0.5 : 1.0
+                    self?.view.alpha = isLoading ? 0.5 : 1.0
                 }
                 .store(in: &cancellables)
      
@@ -143,6 +131,7 @@ class ViewWeatherController: UIViewController {
         super.viewDidLoad()
         setupUI()
         bindViewModel()
+        viewModel.fetchWeather()
     }
     
 }

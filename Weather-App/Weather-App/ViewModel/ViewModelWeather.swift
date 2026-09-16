@@ -40,7 +40,7 @@ class WeatherViewModel: ObservableObject {
         outfitText = outfitAdvisor.recommendation(for: Int(tempC))
      
         if let dewpointC = ob.dewpointC {
-            temperatureRangeText = "today \(dewpointC)° - \(tempC)°"
+            temperatureRangeText = "today \(dewpointC - 3)° - \(tempC + 3)°"
         }
     }
     
