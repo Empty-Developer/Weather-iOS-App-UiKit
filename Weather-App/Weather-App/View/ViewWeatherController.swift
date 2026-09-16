@@ -10,7 +10,6 @@ import Combine
 
 /*
     TODO: Work
-    1. configure ServiceWeather
     2. configure ViewWeatherController
     3. configure ViewModelWeather
     4. configure ModelIcon
