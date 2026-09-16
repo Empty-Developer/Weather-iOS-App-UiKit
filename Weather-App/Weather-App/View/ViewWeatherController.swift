@@ -10,14 +10,12 @@ import Combine
 
 /*
     TODO: Work
-    2. configure ModelIcon
     2. configure ProviderIcon
     2. configure ViewModelIcon
  
     3. create three button London, Moscow, Tokyo
     3. configure ViewModelWeather for three location
  
-    4. configure media
 */
 
 class ViewWeatherController: UIViewController {
