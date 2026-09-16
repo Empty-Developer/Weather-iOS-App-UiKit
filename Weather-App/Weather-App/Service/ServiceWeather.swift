@@ -21,23 +21,22 @@ enum ServiceWeatherError: LocalizedError {
         }
     }
 }
- 
+
 final class WeatherService: ServiceProtocolWeather {
  
     private let session: URLSession
     private let decoder: JSONDecoder
- 
+    
     init(session: URLSession = .shared) {
         self.session = session
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         self.decoder = decoder
     }
- 
+    
     func fetchWeather() -> AnyPublisher<ModelWeather, Error> {
-        guard let url = URL(
-            string: "https://data.api.xweather.com/observations/seattle,wa?client_id=V6RJhXJfqG7uLStG5TFuF&client_secret=E9pC7YD6KVJZPN4dPpuSPJ04FgvqfW0tda62A4Qq"
-        ) else {
+        guard let url = URL(string: "https://data.api.xweather.com/observations/seattle,wa?client_id=\(Secrets.clientId)&client_secret=\(Secrets.clientSecret)")
+        else {
             return Fail(error: ServiceWeatherError.invalidURL).eraseToAnyPublisher()
         }
  

@@ -50,7 +50,8 @@ class WeatherViewModel: ObservableObject {
     
         service.fetchWeather()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in self?.isLoading = false
+            .sink(receiveCompletion: { [weak self] completion in
+                self?.isLoading = false
                 if case .failure(let error) = completion {
                     self?.errorMessage = error.localizedDescription
                 }

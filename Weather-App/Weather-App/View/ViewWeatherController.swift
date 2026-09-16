@@ -94,6 +94,7 @@ class ViewWeatherController: UIViewController {
     
     // MARK: - Bindin
     private func bindViewModel() {
+        print("https://data.api.xweather.com/observations/seattle,wa?client_id=\(Secrets.clientId)&client_secret=\(Secrets.clientSecret)")
             viewModel.$temperatureText
                 .receive(on: DispatchQueue.main)
                 .sink { [weak self] text in
