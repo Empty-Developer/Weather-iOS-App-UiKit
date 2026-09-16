@@ -11,10 +11,10 @@ import Combine
 class WeatherViewModel: ObservableObject {
     
     // MARK: Published
-    @Publisher private(set) var temperatureText: String = "—"
-    @Publisher private(set) var temperatureRangeText: String = "today —° - —°"
-    @Publisher private(set) var outfitText: String = "———, ———, ———, ———, ———"
-    @Publisher private(set) var isLoading: Bool = false
+    @Published private(set) var temperatureText: String = "—"
+    @Published private(set) var temperatureRangeText: String = "today —° - —°"
+    @Published private(set) var outfitText: String = "———, ———, ———, ———, ———"
+    @Published private(set) var isLoading: Bool = false
     @Published var errorMessage: String?
     
     // MARK: Dependencies
@@ -48,7 +48,7 @@ class WeatherViewModel: ObservableObject {
         isLoading = true
         errorMessage = nil
     
-        service.fetchWeather(for: location)
+        service.fetchWeather()
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in self?.isLoading = false
                 if case .failure(let error) = completion {

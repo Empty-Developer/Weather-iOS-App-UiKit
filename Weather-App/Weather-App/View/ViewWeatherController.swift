@@ -10,8 +10,6 @@ import Combine
 
 /*
     TODO: Work
-    2. configure ViewWeatherController
-    3. configure ViewModelWeather
     4. configure ModelIcon
     5. configure ProviderIcon
     6. configure ViewModelIcon
@@ -23,10 +21,22 @@ import Combine
 
 class ViewWeatherController: UIViewController {
     // MARK: - Dependencies
-    private let viewModel = WeatherViewModel()
+    private var viewModel = WeatherViewModel()
     private var cancellables: Set<AnyCancellable> = Set()
     
-    func createLabel(text: String, frame: CGRect, font: UIFont) -> UILabel {
+    init(viewModel: WeatherViewModel = WeatherViewModel()) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        self.viewModel = WeatherViewModel()
+        super.init(coder: coder)
+    }
+    
+    // MARK: - UI
+    
+    private func createLabel(text: String, frame: CGRect, font: UIFont) -> UILabel {
         let label: UILabel = UILabel()
         label.text = text
         label.frame = frame
@@ -82,43 +92,45 @@ class ViewWeatherController: UIViewController {
         view.addSubview(getWeatherbtn)
     }
     
+    // MARK: - Bindin
     private func bindViewModel() {
-        viewModel.$weather
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] weather in
-                guard let self = self, let ob = weather?.response?.ob else { return }
-                
-                if let tempC = ob.tempC {
-                    self.degree.text = "\(Int(tempC))"
-                    
-//                    let userInfo = ViewModelOutfitOfTheDay(dataUser: Int(tempC))
-//                    self.informationOfDay.text = userInfo.getValyeOutfit()
+            viewModel.$temperatureText
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] text in
+                    self?.degree.text = text
                 }
-                
-                if let minTempC = ob.dewpointC,
-                   let maxTempC = ob.tempC {
-                    self.approximateTemperatureToday.text = "today \(minTempC)° - \(maxTempC)°"
+                .store(in: &cancellables)
+     
+            viewModel.$temperatureRangeText
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] text in
+                    self?.approximateTemperatureToday.text = text
                 }
-                
-            }
-            .store(in: &cancellables)
-        
-        viewModel.$isLoading
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] isLoading in
-                self?.getWeatherbtn.isEnabled = !isLoading
-                self?.getWeatherbtn.alpha = isLoading ? 0.5 : 1.0
-            }
-            .store(in: &cancellables)
-                
-        viewModel.$errorMessage
-            .compactMap { $0 }
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] message in
-                self?.showErrorAlert(message: message)
-            }
-            .store(in: &cancellables)
-    }
+                .store(in: &cancellables)
+     
+            viewModel.$outfitText
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] text in
+                    self?.informationOfDay.text = text
+                }
+                .store(in: &cancellables)
+     
+            viewModel.$isLoading
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] isLoading in
+                    self?.getWeatherbtn.isEnabled = !isLoading
+                    self?.getWeatherbtn.alpha = isLoading ? 0.5 : 1.0
+                }
+                .store(in: &cancellables)
+     
+            viewModel.$errorMessage
+                .compactMap { $0 }
+                .receive(on: DispatchQueue.main)
+                .sink { [weak self] message in
+                    self?.showErrorAlert(message: message)
+                }
+                .store(in: &cancellables)
+        }
         
     private func showErrorAlert(message: String) {
         let alert = UIAlertController(title: "Error", message: message, preferredStyle: .alert)

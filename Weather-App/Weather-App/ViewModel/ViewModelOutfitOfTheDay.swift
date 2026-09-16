@@ -15,7 +15,7 @@ class ViewModelOutfitOfTheDay {
         self.data = data
     }
     
-    func getValyeOutfit(for temperatureC: Int) -> String {
+    func recommendation(for temperatureC: Int) -> String {
         let temperature = min(max(temperatureC, -40), 40)
         let roundedTemperature = Int(
             (Double(temperature) / 10.0).rounded() * 10
