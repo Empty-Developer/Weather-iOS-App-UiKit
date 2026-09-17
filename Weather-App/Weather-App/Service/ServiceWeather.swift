@@ -33,9 +33,9 @@ final class WeatherService: ServiceProtocolWeather {
         decoder.dateDecodingStrategy = .iso8601
         self.decoder = decoder
     }
-    
-    func fetchWeather() -> AnyPublisher<ModelWeather, Error> {
-        guard let url = URL(string: "https://data.api.xweather.com/observations/seattle,wa?client_id=\(Secrets.clientId)&client_secret=\(Secrets.clientSecret)")
+    // miami,fl
+    func fetchWeather(for city: City) -> AnyPublisher<ModelWeather, Error> {
+        guard let url = URL(string: "https://data.api.xweather.com/observations/\(city.rawValue)?client_id=\(Secrets.clientId)&client_secret=\(Secrets.clientSecret)")
         else {
             return Fail(error: ServiceWeatherError.invalidURL).eraseToAnyPublisher()
         }

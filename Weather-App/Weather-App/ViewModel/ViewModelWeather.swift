@@ -11,25 +11,29 @@ import Combine
 class WeatherViewModel: ObservableObject {
     
     // MARK: Published
+    @Published private(set) var weatherIconName: String = "loading-icon"
     @Published private(set) var temperatureText: String = "—"
     @Published private(set) var temperatureRangeText: String = "today —° - —°"
     @Published private(set) var outfitText: String = "———, ———, ———, ———, ———"
     @Published private(set) var isLoading: Bool = false
     @Published var errorMessage: String?
-    
+    @Published private(set) var selectedCity: City = .miami
     // MARK: Dependencies
     private let service: ServiceProtocolWeather
     private let outfitAdvisor: ViewModelOutfitOfTheDay
-    private let location: String
     private var cancellables = Set<AnyCancellable>()
     
     init(service: ServiceProtocolWeather = WeatherService(),
-         outfitAdvisor: ViewModelOutfitOfTheDay = ViewModelOutfitOfTheDay(),
-         location: String = "seattle,wa") {
+         outfitAdvisor: ViewModelOutfitOfTheDay = ViewModelOutfitOfTheDay()) {
         
         self.service = service
         self.outfitAdvisor = outfitAdvisor
-        self.location = location
+        fetchWeather(for: selectedCity)
+    }
+    
+    func selectCity(_ city: City) {
+        self.selectedCity = city
+        fetchWeather(for: city)
     }
     
     // MARK: - Private
@@ -40,15 +44,20 @@ class WeatherViewModel: ObservableObject {
         outfitText = outfitAdvisor.recommendation(for: Int(tempC))
      
         if let dewpointC = ob.dewpointC {
-            temperatureRangeText = "today \(dewpointC - 3)° - \(tempC + 3)°"
+            temperatureRangeText = "today \(Int(dewpointC - 3))° - \(Int(tempC + 3))°"
         }
+        
+        if let icon = ob.icon {
+            weatherIconName = weatherAssetName(for: icon)
+        }
+        
     }
     
-    func fetchWeather() {
+    func fetchWeather(for city: City) {
         isLoading = true
         errorMessage = nil
-    
-        service.fetchWeather()
+        
+        service.fetchWeather(for: city)
             .receive(on: DispatchQueue.main)
             .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
